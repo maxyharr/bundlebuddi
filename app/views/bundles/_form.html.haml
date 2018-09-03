@@ -1,0 +1,40 @@
+= form_for @bundle do |f|
+  - if @bundle.errors.any?
+    #error_explanation
+      %h2= "#{pluralize(@bundle.errors.count, "error")} prohibited this bundle from being saved:"
+      %ul
+        - @bundle.errors.full_messages.each do |message|
+          %li= message
+
+  .row.mt-4
+    .col-md-8
+      %h4
+        Available Subscriptions
+      %p
+        Add two or more to create a bundle
+    .col-md-4
+      .d-flex.flex-row.justify-content-center.align-items-end
+        %div
+          %dt Pre-bundled Total
+          %dd#unbundled-cost $0
+        .ml-3
+          %dt Bundled Total
+          %dd#bundled-cost Not yet available
+  .row.mt-3
+    .col-md-12
+      %table.table.table-striped
+        %tr
+          %th{scope: 'col', style: 'width: 33%'} Name
+          %th{scope: 'col', style: 'width: 33%'} Pre-bundled Cost
+          %th{scope: 'col', style: 'width: 33%'} Bundle
+        - @subscriptions.each do |subscription|
+          %tr.subscription-row
+            = hidden_field :cost_in_cents, subscription.cost_in_cents, value: subscription.cost_in_cents, class: 'cost-in-cents'
+
+            %td= subscription.name
+            %td= number_to_currency subscription.cost_in_cents/100.0
+            %td
+              = f.button 'Add', type: 'button', class: 'add-subscription btn btn-secondary'
+
+      .actions
+        = f.submit 'Save', class: 'btn btn-primary'
