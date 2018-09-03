@@ -1,0 +1,11 @@
+%p#notice= notice
+
+%dt Name
+%dd= @subscription.name
+
+%dt Cost
+%dd= "$#{@subscription.cost_in_cents/100.0}"
+
+= link_to 'Edit', edit_subscription_path(@subscription)
+\|
+= link_to 'Back', subscriptions_path
