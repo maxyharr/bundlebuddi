@@ -1,4 +1,4 @@
-class BundlesController < ApplicationController
+  class BundlesController < ApplicationController
   before_action :set_bundle, only: [:show, :edit, :update, :destroy]
 
   # GET /bundles
@@ -10,6 +10,7 @@ class BundlesController < ApplicationController
   # GET /bundles/1
   # GET /bundles/1.json
   def show
+    @subscriptions = @bundle.subscriptions
   end
 
   # GET /bundles/new
@@ -25,16 +26,19 @@ class BundlesController < ApplicationController
   # POST /bundles
   # POST /bundles.json
   def create
-    @bundle = Bundle.new(bundle_params)
+    @bundle = Bundle.create
 
-    respond_to do |format|
-      if @bundle.save
-        format.html { redirect_to @bundle, notice: 'Bundle was successfully created.' }
-        format.json { render :show, status: :created, location: @bundle }
-      else
-        format.html { render :new }
-        format.json { render json: @bundle.errors, status: :unprocessable_entity }
-      end
+    bundle_subscriptions = []
+    bundle_params[:bundle_subscriptions].each do |subscription_id|
+      bundle_subscriptions << BundleSubscription.new(bundle_id: @bundle.id, subscription_id: subscription_id)
+    end
+    puts "bundle_subscriptions: #{bundle_subscriptions}"
+
+    if BundleSubscription.import(bundle_subscriptions)
+      redirect_to @bundle, notice: 'Bundle was successfully created.'
+    else
+      @bundle.destroy
+      render :new
     end
   end
 
@@ -70,6 +74,6 @@ class BundlesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def bundle_params
-      params.fetch(:bundle, {})
+      params.require(:bundle).permit(bundle_subscriptions: [])
     end
 end

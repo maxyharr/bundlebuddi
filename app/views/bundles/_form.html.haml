@@ -34,7 +34,11 @@
             %td= subscription.name
             %td= number_to_currency subscription.cost_in_cents/100.0
             %td
-              = f.button 'Add', type: 'button', class: 'add-subscription btn btn-secondary'
+              .btn-group-toggle{'data-toggle': 'buttons'}
+                = f.label :bundle_subscriptions, class: 'btn btn-secondary add-subscription' do
+                  = f.check_box :bundle_subscriptions, {multiple: true}, subscription.id, nil
+                  .checkbox-text Add
+
 
       .actions
         = f.submit 'Save', class: 'btn btn-primary'

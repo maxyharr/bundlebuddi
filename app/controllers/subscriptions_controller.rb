@@ -1,10 +1,10 @@
 class SubscriptionsController < ApplicationController
+  before_action :set_subscription, only: [:show, :edit, :update, :destroy]
   def index
     @subscriptions = Subscription.all
   end
 
   def show
-    @subscription = Subscription.find params[:id]
   end
 
   def new
@@ -17,23 +17,23 @@ class SubscriptionsController < ApplicationController
   end
 
   def edit
-    @subscription = Subscription.find params[:id]
   end
 
   def update
-    @subscription = Subscription.find params[:id]
     @subscription.update subscription_params
     redirect_to @subscription
   end
 
   def destroy
-    @subscription = Subscription.find params[:id]
     @subscription.destroy
     redirect_to subscriptions_path
   end
 
 
   private
+    def set_subscription
+      @subscription = Subscription.find params[:id]
+    end
 
     def subscription_params
       params.require(:subscription).permit(:name, :cost_in_cents)

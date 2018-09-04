@@ -1,0 +1,14 @@
+%table.table.table-striped
+  %tr
+    %th Name
+    %th Pre-bundling Cost
+    - if current_page?(controller: :subscriptions)
+      %th Edit
+      %th Delete
+  - @subscriptions.each do |subscription|
+    %tr
+      %td= subscription.name
+      %td= number_to_currency subscription.cost_in_cents/100.0
+      - if current_page?(controller: :subscriptions)
+        %td= link_to 'Edit', edit_subscription_path(subscription)
+        %td= link_to 'Delete', { action: :destroy, id: subscription.id }, method: :delete, data: { confirm: 'Are you sure?' }

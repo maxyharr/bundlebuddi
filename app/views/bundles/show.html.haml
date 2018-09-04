@@ -1,6 +1,15 @@
 %p#notice= notice
 
+.d-flex.flex-row.justify-content-start.align-items-center
+  .mr-3
+    %dt Pre-bundled Cost
+    %dd= "$#{@bundle.prebundled_cost_in_cents/100.0}"
 
-= link_to 'Edit', edit_bundle_path(@bundle)
-\|
-= link_to 'Back', bundles_path
+  %div
+    %dt Bundled Cost
+    %dd Not yet available
+
+= render 'subscriptions/subscription_list'
+
+-# TODO: Repurpose create and edit form
+-# = link_to 'Edit', edit_bundle_path(@bundle)
