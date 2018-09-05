@@ -10,4 +10,8 @@
   %body
     = render 'layouts/header'
     .container
+      - if notice
+        .mt-3.alert.alert-primary= notice
+      - if alert
+        .mt-3.alert.alert-danger= alert
       = yield

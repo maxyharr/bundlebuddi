@@ -1,15 +1,17 @@
-%p#notice= notice
+.row.mt-4
+  .col-md-12
+    %h2 Showing your bundle
+    = link_to 'Edit your bundle', edit_bundle_path(@bundle), class: 'btn btn-secondary'
+    .mt-3.d-flex.flex-row.justify-content-start.align-items-center
+      .mr-3
+        %dt Pre-bundled Cost
+        %dd= number_to_currency(@prebundled_cost)
 
-.d-flex.flex-row.justify-content-start.align-items-center
-  .mr-3
-    %dt Pre-bundled Cost
-    %dd= "$#{@bundle.prebundled_cost_in_cents/100.0}"
+      %div
+        %dt Bundled Cost
+        %dd Not yet available
 
-  %div
-    %dt Bundled Cost
-    %dd Not yet available
+    = render 'subscriptions/subscription_list'
 
-= render 'subscriptions/subscription_list'
-
--# TODO: Repurpose create and edit form
--# = link_to 'Edit', edit_bundle_path(@bundle)
+    -# TODO: Repurpose create and edit form
+    -# = link_to 'Edit', edit_bundle_path(@bundle)

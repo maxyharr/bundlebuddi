@@ -16,7 +16,7 @@
       .d-flex.flex-row.justify-content-center.align-items-end
         %div
           %dt Pre-bundled Total
-          %dd#unbundled-cost $0
+          %dd#unbundled-cost= number_to_currency @prebundled_cost || 0
         .ml-3
           %dt Bundled Total
           %dd#bundled-cost Not yet available
@@ -35,10 +35,10 @@
             %td= number_to_currency subscription.cost_in_cents/100.0
             %td
               .btn-group-toggle{'data-toggle': 'buttons'}
-                = f.label :bundle_subscriptions, class: 'btn btn-secondary add-subscription' do
-                  = f.check_box :bundle_subscriptions, {multiple: true}, subscription.id, nil
-                  .checkbox-text Add
+                = f.label :bundle_subscriptions, class: 'btn add-subscription ' + (@bundled_subscriptions.include?(subscription) ? 'active btn-success selected' : 'btn-secondary') do
+                  = f.check_box :bundle_subscriptions, {multiple: true, checked: @bundled_subscriptions.include?(subscription)}, subscription.id, false
+                  .checkbox-text= @bundled_subscriptions.include?(subscription) ? 'Added' : 'Add'
 
 
-      .actions
+      .form-group
         = f.submit 'Save', class: 'btn btn-primary'

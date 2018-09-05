@@ -1,16 +1,18 @@
   class BundlesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_bundle, only: [:show, :edit, :update, :destroy]
 
   # GET /bundles
   # GET /bundles.json
   def index
-    @bundles = Bundle.all
+    @bundles = current_user.bundle
   end
 
   # GET /bundles/1
   # GET /bundles/1.json
   def show
     @subscriptions = @bundle.subscriptions
+    @prebundled_cost = @bundle.prebundled_cost_in_cents/100.0
   end
 
   # GET /bundles/new
@@ -21,18 +23,16 @@
 
   # GET /bundles/1/edit
   def edit
+    @subscriptions = Subscription.all
+    @bundled_subscriptions = @bundle.subscriptions
+    @prebundled_cost = @bundle.prebundled_cost_in_cents/100.0
   end
 
   # POST /bundles
   # POST /bundles.json
   def create
-    @bundle = Bundle.create
-
-    bundle_subscriptions = []
-    bundle_params[:bundle_subscriptions].each do |subscription_id|
-      bundle_subscriptions << BundleSubscription.new(bundle_id: @bundle.id, subscription_id: subscription_id)
-    end
-    puts "bundle_subscriptions: #{bundle_subscriptions}"
+    @bundle = Bundle.create user: current_user
+    bundle_subscriptions = create_bundle_subs
 
     if BundleSubscription.import(bundle_subscriptions)
       redirect_to @bundle, notice: 'Bundle was successfully created.'
@@ -45,14 +45,14 @@
   # PATCH/PUT /bundles/1
   # PATCH/PUT /bundles/1.json
   def update
-    respond_to do |format|
-      if @bundle.update(bundle_params)
-        format.html { redirect_to @bundle, notice: 'Bundle was successfully updated.' }
-        format.json { render :show, status: :ok, location: @bundle }
-      else
-        format.html { render :edit }
-        format.json { render json: @bundle.errors, status: :unprocessable_entity }
-      end
+    bundle_subscriptions = create_bundle_subs
+    if BundleSubscription.import(bundle_subscriptions)
+      @bundle.bundle_subscriptions.where.not(id: bundle_subscriptions).destroy_all
+      redirect_to @bundle, notice: 'Bundle was successfully updated.'
+    else
+      edit
+      flash[:alert] = 'Something went wrong while updating your bundle. Please try again.'
+      render :edit and return
     end
   end
 
@@ -67,6 +67,14 @@
   end
 
   private
+    def create_bundle_subs
+      bundle_subscriptions = []
+      bundle_params[:bundle_subscriptions].each do |subscription_id|
+        bundle_subscriptions << BundleSubscription.new(bundle_id: @bundle.id, subscription_id: subscription_id)
+      end
+      bundle_subscriptions
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_bundle
       @bundle = Bundle.find(params[:id])

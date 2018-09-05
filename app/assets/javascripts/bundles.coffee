@@ -12,11 +12,13 @@ $(document).on 'turbolinks:load', ->
       $(this).find('.checkbox-text').text('Add')
       $(this).removeClass('btn-success selected')
       $(this).addClass('btn-secondary')
+      $(this).find(':checkbox').first().attr('checked', false)
       new_cost = unbundled_cost - subscription_cost
     else
       $(this).find('.checkbox-text').text('Added')
       $(this).removeClass('btn-secondary')
       $(this).addClass('btn-success selected')
+      $(this).find(':checkbox').attr('checked', true)
       new_cost = unbundled_cost + subscription_cost
 
     $('#unbundled-cost').text('$' + new_cost/100.0)

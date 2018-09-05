@@ -4,13 +4,30 @@
     %span.navbar-toggler-icon
   #navbarSupportedContent.collapse.navbar-collapse
     %ul.navbar-nav.mr-auto
-      %li.nav-item{class: current_page?(controller: 'bundles', action: 'new') ? 'active' : '' }
-        = link_to new_bundle_path, class: 'nav-link' do
-          Create Bundle
-          - if current_page?(controller: 'bundles', action: 'new')
-            %span.sr-only (current)
-      %li.nav-item{class: current_page?(controller: 'subscriptions') ? 'active' : ''}
-        = link_to subscriptions_path, class: 'nav-link' do
-          Subscriptions
-          - if current_page?(controller: 'subscriptions')
-            %span.sr-only (current)
+      - if current_user
+        - if current_user.bundle
+          %li.nav-item
+            = link_to current_user.bundle, class: 'nav-link', disabled: !current_user.bundle do
+              My Bundle
+        - else
+          %li.nav-item
+            = link_to new_bundle_path, class: 'nav-link' do
+              Create Bundle
+              - if current_page?(controller: 'bundles', action: 'new')
+                %span.sr-only (current)
+        - if current_user.admin?
+          %li.nav-item.ml-5
+            = link_to subscriptions_path, class: 'nav-link' do
+              Edit Subscriptions
+              - if current_page?(controller: 'subscriptions')
+                %span.sr-only (current)
+    %ul.navbar-nav
+      - if current_user
+        %li.nav-item
+          = link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link'
+      - else
+        %li.nav-item
+          = link_to 'Sign in', new_user_session_path, class: 'nav-link'
+        %li.nav-item
+          = link_to 'Sign up', new_user_registration_path, class: 'nav-link'
+
