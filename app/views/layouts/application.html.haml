@@ -10,4 +10,6 @@
   %body
     = render 'layouts/header'
     .container
+      = notice if notice
+      = alert if alert
       = yield
