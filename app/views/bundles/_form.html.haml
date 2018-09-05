@@ -35,9 +35,9 @@
             %td= number_to_currency subscription.cost_in_cents/100.0
             %td
               .btn-group-toggle{'data-toggle': 'buttons'}
-                = f.label :bundle_subscriptions, class: 'btn add-subscription ' + (@bundled_subscriptions.include?(subscription) ? 'active btn-success selected' : 'btn-secondary') do
-                  = f.check_box :bundle_subscriptions, {multiple: true, checked: @bundled_subscriptions.include?(subscription)}, subscription.id, false
-                  .checkbox-text= @bundled_subscriptions.include?(subscription) ? 'Added' : 'Add'
+                = f.label :bundle_subscriptions, class: 'btn add-subscription ' + (@bundled_subscriptions.try(:include?, subscription) ? 'active btn-success selected' : 'btn-secondary') do
+                  = f.check_box :bundle_subscriptions, {multiple: true, checked: @bundled_subscriptions.try(:include?, subscription)}, subscription.id, false
+                  .checkbox-text= @bundled_subscriptions.try(:include?, subscription) ? 'Added' : 'Add'
 
 
       .form-group

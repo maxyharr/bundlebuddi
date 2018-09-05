@@ -16,18 +16,18 @@
               - if current_page?(controller: 'bundles', action: 'new')
                 %span.sr-only (current)
         - if current_user.admin?
-          %li.nav-item.ml-5
+          %li.nav-item
             = link_to subscriptions_path, class: 'nav-link' do
-              Edit Subscriptions
+              Edit Subscriptions (Admin Only)
               - if current_page?(controller: 'subscriptions')
                 %span.sr-only (current)
     %ul.navbar-nav
       - if current_user
         %li.nav-item
-          = link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'nav-link'
+          = link_to 'Log out', destroy_user_session_path, method: :delete, class: 'nav-link'
       - else
         %li.nav-item
-          = link_to 'Sign in', new_user_session_path, class: 'nav-link'
+          = link_to 'Log in', new_user_session_path, class: 'nav-link'
         %li.nav-item
           = link_to 'Sign up', new_user_registration_path, class: 'nav-link'
 
